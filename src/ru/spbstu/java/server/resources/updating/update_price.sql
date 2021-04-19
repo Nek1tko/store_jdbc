@@ -1,0 +1,1 @@
+update WAREHOUSES set AMOUNT = AMOUNT * 1.1
