@@ -1,64 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.control.DatePicker?>
-<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.text.Font?>
-
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.spbstu.java.ui.controller.MainPageController">
-   <children>
-      <TabPane layoutX="-2.0" prefHeight="591.0" prefWidth="689.0" tabClosingPolicy="UNAVAILABLE">
-        <tabs>
-          <Tab text="Sales">
-            <content>
-              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="291.0" prefWidth="486.0">
-                     <children>
-                        <TableView fx:id="salesTable" layoutX="14.0" layoutY="14.0" prefHeight="458.0" prefWidth="491.0">
-                          <columns>
-                            <TableColumn fx:id="saleName" prefWidth="114.0" text="Name" />
-                            <TableColumn fx:id="saleQuantity" prefWidth="98.0" text="Quantity" />
-                              <TableColumn fx:id="saleAmount" prefWidth="104.0" text="Amount" />
-                              <TableColumn fx:id="saleDate" prefWidth="174.0" text="Sale Date " />
-                          </columns>
-                        </TableView>
-                        <Button fx:id="deleteSaleButton" layoutX="544.0" layoutY="34.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="92.0" text="Delete" />
-                        <Button fx:id="addSaleButton" layoutX="544.0" layoutY="432.0" mnemonicParsing="false" onAction="#addSale" prefHeight="34.0" prefWidth="92.0" text="Add" />
-                        <ComboBox fx:id="saleStuffName" layoutX="515.0" layoutY="212.0" prefWidth="150.0" />
-                        <Label layoutX="516.0" layoutY="183.0" prefHeight="17.0" prefWidth="119.0" text="Sale stuff name">
-                           <font>
-                              <Font name="Times New Roman" size="12.0" />
-                           </font>
-                        </Label>
-                        <TextField fx:id="quantityField" layoutX="516.0" layoutY="278.0" />
-                        <TextField fx:id="amountField" layoutX="516.0" layoutY="334.0" />
-                        <Label layoutX="516.0" layoutY="251.0" prefHeight="17.0" prefWidth="119.0" text="Quantity">
-                           <font>
-                              <Font name="Times New Roman" size="12.0" />
-                           </font>
-                        </Label>
-                        <Label layoutX="516.0" layoutY="313.0" prefHeight="17.0" prefWidth="119.0" text="Amount">
-                           <font>
-                              <Font name="Times New Roman" size="12.0" />
-                           </font>
-                        </Label>
-                        <DatePicker fx:id="dateField" layoutX="516.0" layoutY="389.0" prefHeight="25.0" prefWidth="150.0" />
-                     </children>
-                  </AnchorPane>
-            </content>
-          </Tab>
-          <Tab text="Charges">
-            <content>
-              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-            </content>
-          </Tab>
-        </tabs>
-      </TabPane>
-   </children>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0"
+            prefWidth="685.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+    <TabPane layoutX="-2.0" prefHeight="591.0" prefWidth="689.0" tabClosingPolicy="UNAVAILABLE">
+        <Tab fx:id="salesChargesTab" text="Sales">
+            <fx:include source="tabs/sale_tab.fxml"/>
+        </Tab>
+        <Tab text="Charges">
+            <fx:include source="tabs/charge_tab.fxml"/>
+        </Tab>
+    </TabPane>
 </AnchorPane>

@@ -51,8 +51,7 @@ public class SaleTable implements Table<Sale> {
         try (Connection connection = dbConnection.connect()) {
             try (PreparedStatement statement = connection.prepareStatement(
                     "INSERT INTO SALES (AMOUNT, QUANTITY, SALE_DATE, WAREHOUSE_ID) VALUES (?, ?, ?, ?)",
-                    new String[] {"ID"})) {
-                Long id = 1L;
+                    new String[]{"ID"})) {
                 statement.setDouble(1, entity.getAmount());
                 statement.setInt(2, entity.getQuantity());
                 statement.setDate(3, entity.getDate());
@@ -72,11 +71,32 @@ public class SaleTable implements Table<Sale> {
 
     @Override
     public void update(Sale entity) {
-
+        try (Connection connection = dbConnection.connect()) {
+            try (PreparedStatement statement = connection.prepareStatement("UPDATE SALES SET AMOUNT = ?," +
+                    " QUANTITY = ?, SALE_DATE = ?, WAREHOUSE_ID = ? WHERE ID = ?")
+            ) {
+                statement.setDouble(1, entity.getAmount());
+                statement.setInt(2, entity.getQuantity());
+                statement.setDate(3, entity.getDate());
+                statement.setLong(4, entity.getWarehouseId());
+                statement.setLong(5, entity.getId());
+                statement.executeUpdate();
+            }
+        } catch (SQLException throwable) {
+            throwable.printStackTrace();
+        }
     }
 
     @Override
     public void delete(Long id) {
-
+        try (Connection connection = dbConnection.connect()) {
+            try (Statement statement = connection.createStatement()) {
+                String sql = "DELETE FROM SALES WHERE ID = " + id;
+                statement.execute(sql);
+            }
+        } catch (SQLException throwable) {
+            System.out.println(throwable.getMessage());
+            throwable.printStackTrace();
+        }
     }
 }

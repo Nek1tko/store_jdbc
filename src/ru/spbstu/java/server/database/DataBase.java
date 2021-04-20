@@ -44,7 +44,15 @@ public class DataBase {
 
     public Sale addSale(Sale sale) {
         saleTable.insert(sale);
-        sale.setId(10L);
         return sale;
+    }
+
+    public Sale updateSale(Sale sale) {
+        saleTable.update(sale);
+        return sale;
+    }
+
+    public void deleteSale(Long id) {
+        saleTable.delete(id);
     }
 }

@@ -8,11 +8,10 @@ import javafx.stage.Stage;
 import ru.spbstu.java.server.User;
 import ru.spbstu.java.server.connection.OracleDBConnection;
 import ru.spbstu.java.server.database.DataBase;
-import ru.spbstu.java.server.entity.Warehouse;
-import ru.spbstu.java.ui.controller.MainPageController;
+import ru.spbstu.java.ui.controller.SalesController;
+import ru.spbstu.java.ui.controller.TablesController;
 
 import java.io.IOException;
-import java.util.List;
 
 public class Client extends Application {
     private Stage currentStage;
@@ -41,8 +40,9 @@ public class Client extends Application {
         } else {
             currentStage.getScene().setRoot(page);
         }
-        MainPageController controller = loader.getController();
-        controller.setCurrentStage(currentStage);
+        SalesController controller = loader.getController();
+        System.out.println(controller);
+        controller.addTablesRestriction(currentStage);
         currentStage.sizeToScene();
     }
 

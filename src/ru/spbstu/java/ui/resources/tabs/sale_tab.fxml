@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="291.0" prefWidth="486.0" xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="ru.spbstu.java.ui.controller.SalesController">
+    <children>
+        <TableView fx:id="salesTable" layoutX="14.0" layoutY="14.0" prefHeight="458.0" prefWidth="491.0">
+            <columns>
+                <TableColumn fx:id="saleName" prefWidth="114.0" text="Name"/>
+                <TableColumn fx:id="saleQuantity" prefWidth="98.0" text="Quantity"/>
+                <TableColumn fx:id="saleAmount" prefWidth="104.0" text="Amount"/>
+                <TableColumn fx:id="saleDate" prefWidth="174.0" text="Sale Date "/>
+            </columns>
+        </TableView>
+        <Button fx:id="deleteSaleButton" layoutX="544.0" layoutY="34.0" mnemonicParsing="false" onAction="#deleteSale"
+                prefHeight="34.0" prefWidth="92.0" text="Delete"/>
+        <Button fx:id="addSaleButton" layoutX="544.0" layoutY="432.0" mnemonicParsing="false" onAction="#addSale"
+                prefHeight="34.0" prefWidth="92.0" text="Add"/>
+        <ComboBox fx:id="saleStuffName" layoutX="515.0" layoutY="212.0" prefWidth="150.0"/>
+        <Label layoutX="516.0" layoutY="194.0" prefHeight="17.0" prefWidth="119.0" text="Sale stuff name">
+            <font>
+                <Font name="Times New Roman" size="14.0"/>
+            </font>
+        </Label>
+        <TextField fx:id="quantityField" layoutX="516.0" layoutY="278.0"/>
+        <TextField fx:id="amountField" layoutX="516.0" layoutY="334.0"/>
+        <Label layoutX="516.0" layoutY="260.0" prefHeight="17.0" prefWidth="119.0" text="Quantity">
+            <font>
+                <Font name="Times New Roman" size="14.0"/>
+            </font>
+        </Label>
+        <Label layoutX="516.0" layoutY="316.0" prefHeight="17.0" prefWidth="119.0" text="Amount">
+            <font>
+                <Font name="Times New Roman" size="14.0"/>
+            </font>
+        </Label>
+        <DatePicker fx:id="dateField" layoutX="516.0" layoutY="389.0" prefHeight="25.0" prefWidth="150.0"/>
+        <Button fx:id="updateSaleButton" disable="true" layoutX="544.0" layoutY="432.0" mnemonicParsing="false"
+                onAction="#updateSale" prefHeight="34.0" prefWidth="91.0" text="Update"/>
+    </children>
+</AnchorPane>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.text.Font?>
+<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="ru.spbstu.java.ui.controller.ChargesController">
+    <children>
+        <TableView fx:id="chargesTable" layoutX="12.0" layoutY="10.0" prefHeight="405.0" prefWidth="510.0">
+            <columns>
+                <TableColumn fx:id="expenseItemColumn" prefWidth="196.00002479553223" text="Expense item" />
+                <TableColumn fx:id="amountColumn" prefWidth="169.60003662109375" text="Amount" />
+                <TableColumn fx:id="dateColumn" prefWidth="141.60003051757815" text="Date" />
+            </columns>
+        </TableView>
+        <Button fx:id="deleteChargeButton" layoutX="554.0" layoutY="29.0" mnemonicParsing="false" onAction="#deleteCharge" prefHeight="32.0" prefWidth="92.0" text="Delete" />
+        <ComboBox fx:id="expenseItemComboBox" layoutX="533.0" layoutY="155.0" prefHeight="26.0" prefWidth="138.0" />
+        <DatePicker fx:id="chargeDate" layoutX="530.0" layoutY="296.0" prefHeight="26.0" prefWidth="139.0" />
+        <TextField fx:id="amountTextField" layoutX="532.0" layoutY="231.0" prefHeight="26.0" prefWidth="138.0" />
+        <Text layoutX="532.0" layoutY="150.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Expense item">
+            <font>
+                <Font name="Times New Roman" size="14.0" />
+            </font>
+        </Text>
+        <Text layoutX="533.0" layoutY="226.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Amount">
+            <font>
+                <Font name="Times New Roman" size="14.0" />
+            </font>
+        </Text>
+        <Button fx:id="updateChargeButton" disable="true" layoutX="554.0" layoutY="377.0" mnemonicParsing="false" onAction="#updateCharge" prefHeight="38.0" prefWidth="92.0" text="Update" visible="false" />
+        <Button fx:id="addChargeButton" layoutX="554.0" layoutY="377.0" mnemonicParsing="false" onAction="#addCharge" prefHeight="32.0" prefWidth="92.0" text="Add" />
+    </children>
+</AnchorPane>

@@ -12,21 +12,27 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import ru.spbstu.java.server.builder.SaleBuilder;
 import ru.spbstu.java.server.database.DataBase;
+import ru.spbstu.java.server.entity.Charge;
 import ru.spbstu.java.server.entity.Sale;
 import ru.spbstu.java.server.entity.Warehouse;
 
 import java.net.URL;
-import java.time.LocalDate;
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
-public class MainPageController implements Initializable {
-    private Stage currentStage;
+public class SalesController implements Initializable {
     private DataBase dataBase;
     private Map<String, Long> warehouses;
+
+    @FXML
+    private Button addSaleButton;
+
+    @FXML
+    private Button updateSaleButton;
 
     @FXML
     private ComboBox<String> saleStuffName;
@@ -57,7 +63,7 @@ public class MainPageController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        dataBase = DataBase.instance();
+        dataBase = ru.spbstu.java.server.database.DataBase.instance();
         salesTable.getSelectionModel().getSelectedItems().addListener((ListChangeListener<Sale>) change -> {
             Sale sale = salesTable.getSelectionModel().getSelectedItem();
             if (sale != null) {
@@ -65,8 +71,7 @@ public class MainPageController implements Initializable {
                 quantityField.setText(sale.getQuantity().toString());
                 amountField.setText(sale.getAmount().toString());
                 dateField.setValue(sale.getDate().toLocalDate());
-            }
-            else {
+            } else {
                 saleStuffName.setValue("");
                 quantityField.setText("");
                 amountField.setText("");
@@ -87,6 +92,8 @@ public class MainPageController implements Initializable {
         saleDate.setCellValueFactory(new PropertyValueFactory<>("Date"));
         ObservableList<Sale> listSaleTransferObject = getSales();
         salesTable.getItems().addAll(listSaleTransferObject);
+
+
     }
 
     private ObservableList<Sale> getSales() {
@@ -121,6 +128,35 @@ public class MainPageController implements Initializable {
         }
     }
 
+    public void updateSale() {
+        if (checkFields()) {
+            Sale currentSale = salesTable.getSelectionModel().getSelectedItem();
+            Sale updatedSale = new SaleBuilder()
+                    .id(currentSale.getId())
+                    .amount(Double.parseDouble(amountField.getText()))
+                    .quantity(Integer.parseInt(quantityField.getText()))
+                    .date(Date.valueOf(dateField.getValue()))
+                    .warehouseId(warehouses.get(saleStuffName.getValue()))
+                    .build();
+            dataBase.updateSale(updatedSale);
+            currentSale.setQuantity(updatedSale.getQuantity());
+            currentSale.setAmount(updatedSale.getAmount());
+            currentSale.setDate(updatedSale.getDate());
+            currentSale.setWarehouseId(updatedSale.getWarehouseId());
+            salesTable.refresh();
+        } else {
+            createAlertWindow();
+        }
+    }
+
+    public void deleteSale() {
+        Sale selectedSale = salesTable.getSelectionModel().getSelectedItem();
+        if (selectedSale != null) {
+            dataBase.deleteSale(selectedSale.getId());
+            salesTable.getItems().remove(selectedSale);
+        }
+    }
+
     private void createAlertWindow() {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Invalid input");
@@ -129,17 +165,25 @@ public class MainPageController implements Initializable {
         alert.showAndWait();
     }
 
-    public void setCurrentStage(Stage currentStage) {
-        this.currentStage = currentStage;
+    public void addTablesRestriction(Stage currentStage) {
         currentStage.getScene().addEventFilter(MouseEvent.MOUSE_CLICKED, (evt) -> {
             Node source = evt.getPickResult().getIntersectedNode();
-
             while (source != null && !(source instanceof TableRow)) {
                 source = source.getParent();
             }
 
-            if (source == null || (source instanceof TableRow && ((TableRow) source).isEmpty())) {
+            if (source != null && ((TableRow) source).isEmpty()) {
                 salesTable.getSelectionModel().clearSelection();
+                updateSaleButton.setDisable(true);
+                updateSaleButton.setVisible(false);
+                addSaleButton.setDisable(false);
+                addSaleButton.setVisible(true);
+
+            } else if (source != null && !((TableRow) source).isEmpty()) {
+                updateSaleButton.setDisable(false);
+                updateSaleButton.setVisible(true);
+                addSaleButton.setDisable(true);
+                addSaleButton.setVisible(false);
             }
         });
     }
