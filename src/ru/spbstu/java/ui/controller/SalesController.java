@@ -12,12 +12,12 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import ru.spbstu.java.server.builder.SaleBuilder;
 import ru.spbstu.java.server.database.DataBase;
-import ru.spbstu.java.server.entity.Charge;
 import ru.spbstu.java.server.entity.Sale;
 import ru.spbstu.java.server.entity.Warehouse;
 
 import java.net.URL;
 import java.sql.Date;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +27,9 @@ import java.util.stream.Collectors;
 public class SalesController implements Initializable {
     private DataBase dataBase;
     private Map<String, Long> warehouses;
+
+    @FXML
+    private Button cancelButton;
 
     @FXML
     private Button addSaleButton;
@@ -71,38 +74,42 @@ public class SalesController implements Initializable {
                 quantityField.setText(sale.getQuantity().toString());
                 amountField.setText(sale.getAmount().toString());
                 dateField.setValue(sale.getDate().toLocalDate());
-            } else {
-                saleStuffName.setValue("");
-                quantityField.setText("");
-                amountField.setText("");
-                dateField.setValue(LocalDate.now());
+                cancelButton.setDisable(false);
+                updateSaleButton.setDisable(false);
+                updateSaleButton.setVisible(true);
+                addSaleButton.setDisable(true);
+                addSaleButton.setVisible(false);
             }
         });
-
-        List<Warehouse> list = getWarehouses();
-        for (Warehouse el : list) {
-            saleStuffName.getItems().add(el.getName());
-        }
-        warehouses = list.stream().collect(Collectors.toMap(Warehouse::getName, Warehouse::getId));
-
         dateField.setValue(LocalDate.now());
         saleName.setCellValueFactory(new PropertyValueFactory<>("Name"));
         saleQuantity.setCellValueFactory(new PropertyValueFactory<>("Quantity"));
         saleAmount.setCellValueFactory(new PropertyValueFactory<>("Amount"));
         saleDate.setCellValueFactory(new PropertyValueFactory<>("Date"));
-        ObservableList<Sale> listSaleTransferObject = getSales();
-        salesTable.getItems().addAll(listSaleTransferObject);
 
+        try {
+            List<Warehouse> list = getWarehouses();
+            for (Warehouse el : list) {
+                saleStuffName.getItems().add(el.getName());
+            }
+            warehouses = list.stream().collect(Collectors.toMap(Warehouse::getName, Warehouse::getId));
+
+
+            ObservableList<Sale> listSaleTransferObject = getSales();
+            salesTable.getItems().addAll(listSaleTransferObject);
+        } catch (SQLException throwable) {
+            throwable.printStackTrace();
+        }
 
     }
 
-    private ObservableList<Sale> getSales() {
+    private ObservableList<Sale> getSales() throws SQLException {
         List<Sale> listSaleTransferObject = dataBase.getSales();
 
         return FXCollections.observableList(listSaleTransferObject);
     }
 
-    private List<Warehouse> getWarehouses() {
+    private List<Warehouse> getWarehouses() throws SQLException {
         return dataBase.getWarehouses();
     }
 
@@ -157,34 +164,23 @@ public class SalesController implements Initializable {
         }
     }
 
+    public void cancelUpdate() {
+        updateSaleButton.setDisable(true);
+        updateSaleButton.setVisible(false);
+        addSaleButton.setDisable(false);
+        addSaleButton.setVisible(true);
+        saleStuffName.setValue("");
+        quantityField.setText("");
+        amountField.setText("");
+        dateField.setValue(LocalDate.now());
+        salesTable.getSelectionModel().clearSelection();
+    }
+
     private void createAlertWindow() {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Invalid input");
         alert.setHeaderText(null);
         alert.setContentText("All fields must not be empty!");
         alert.showAndWait();
-    }
-
-    public void addTablesRestriction(Stage currentStage) {
-        currentStage.getScene().addEventFilter(MouseEvent.MOUSE_CLICKED, (evt) -> {
-            Node source = evt.getPickResult().getIntersectedNode();
-            while (source != null && !(source instanceof TableRow)) {
-                source = source.getParent();
-            }
-
-            if (source != null && ((TableRow) source).isEmpty()) {
-                salesTable.getSelectionModel().clearSelection();
-                updateSaleButton.setDisable(true);
-                updateSaleButton.setVisible(false);
-                addSaleButton.setDisable(false);
-                addSaleButton.setVisible(true);
-
-            } else if (source != null && !((TableRow) source).isEmpty()) {
-                updateSaleButton.setDisable(false);
-                updateSaleButton.setVisible(true);
-                addSaleButton.setDisable(true);
-                addSaleButton.setVisible(false);
-            }
-        });
     }
 }

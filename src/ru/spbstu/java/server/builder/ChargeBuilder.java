@@ -3,6 +3,8 @@ package ru.spbstu.java.server.builder;
 import ru.spbstu.java.server.entity.Charge;
 import ru.spbstu.java.server.entity.ExpenseItem;
 
+import java.sql.Date;
+
 public class ChargeBuilder implements Builder<Charge> {
     private Charge charge;
 
@@ -25,8 +27,18 @@ public class ChargeBuilder implements Builder<Charge> {
         return this;
     }
 
-    public ChargeBuilder expenseItem(ExpenseItem expenseItem) {
-        charge.setExpenseItem(expenseItem);
+    public ChargeBuilder date(Date date) {
+        charge.setDate(date);
+        return this;
+    }
+
+    public ChargeBuilder expenseItemId(Long expenseItemId) {
+        charge.setExpenseItemId(expenseItemId);
+        return this;
+    }
+
+    public ChargeBuilder name(String name) {
+        charge.setName(name);
         return this;
     }
 }

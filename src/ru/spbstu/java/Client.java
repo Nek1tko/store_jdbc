@@ -9,7 +9,6 @@ import ru.spbstu.java.server.User;
 import ru.spbstu.java.server.connection.OracleDBConnection;
 import ru.spbstu.java.server.database.DataBase;
 import ru.spbstu.java.ui.controller.SalesController;
-import ru.spbstu.java.ui.controller.TablesController;
 
 import java.io.IOException;
 
@@ -40,10 +39,6 @@ public class Client extends Application {
         } else {
             currentStage.getScene().setRoot(page);
         }
-        SalesController controller = loader.getController();
-        System.out.println(controller);
-        controller.addTablesRestriction(currentStage);
-        currentStage.sizeToScene();
     }
 
 

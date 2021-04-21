@@ -1,8 +1,10 @@
 package ru.spbstu.java.server.database.table;
 
-import ru.spbstu.java.server.builder.WarehouseBuilder;
+import ru.spbstu.java.server.builder.ChargeBuilder;
+import ru.spbstu.java.server.builder.SaleBuilder;
 import ru.spbstu.java.server.connection.DBConnection;
-import ru.spbstu.java.server.entity.Warehouse;
+import ru.spbstu.java.server.entity.Charge;
+import ru.spbstu.java.server.entity.Sale;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -11,26 +13,30 @@ import java.sql.Statement;
 import java.util.LinkedList;
 import java.util.List;
 
-public class WarehouseTable implements Table<Warehouse> {
+public class ChargeTable implements Table<Charge>{
     private final DBConnection dbConnection;
 
-    public WarehouseTable(DBConnection dbConnection) {
+    public ChargeTable(DBConnection dbConnection) {
         this.dbConnection = dbConnection;
     }
 
     @Override
-    public List<Warehouse> get() throws SQLException {
+    public List<Charge> get() throws SQLException {
         try (Connection connection = dbConnection.connect()) {
             try (Statement statement = connection.createStatement()) {
-                String sql = "SELECT * FROM Warehouses";
+                String sql = "SELECT CHARGES.ID as ID, AMOUNT, CHARGE_DATE, " +
+                        "E.ID as EXPENSE_ITEM_ID, NAME " +
+                        "FROM CHARGES JOIN EXPENSE_ITEMS E " +
+                        "ON CHARGES.EXPENSE_ITEM_ID = E.ID";
                 try (ResultSet resultSet = statement.executeQuery(sql)) {
-                    List<Warehouse> list = new LinkedList<>();
+                    List<Charge> list = new LinkedList<>();
                     while (resultSet.next()) {
-                        list.add(new WarehouseBuilder()
+                        list.add(new ChargeBuilder()
                                 .id(resultSet.getLong("id"))
-                                .name(resultSet.getString("name"))
-                                .quantity(resultSet.getInt("quantity"))
                                 .amount(resultSet.getDouble("amount"))
+                                .date(resultSet.getDate("charge_date"))
+                                .name(resultSet.getString("name"))
+                                .expenseItemId(resultSet.getLong("expense_item_id"))
                                 .build()
                         );
                     }
@@ -41,12 +47,12 @@ public class WarehouseTable implements Table<Warehouse> {
     }
 
     @Override
-    public void insert(Warehouse entity) {
+    public void insert(Charge entity) {
 
     }
 
     @Override
-    public void update(Warehouse entity) {
+    public void update(Charge entity) {
 
     }
 

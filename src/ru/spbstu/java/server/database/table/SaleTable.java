@@ -9,14 +9,14 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class SaleTable implements Table<Sale> {
-    DBConnection dbConnection;
+    private final DBConnection dbConnection;
 
     public SaleTable(DBConnection dbConnection) {
         this.dbConnection = dbConnection;
     }
 
     @Override
-    public List<Sale> get() {
+    public List<Sale> get() throws SQLException {
         try (Connection connection = dbConnection.connect()) {
             try (Statement statement = connection.createStatement()) {
                 String sql = "SELECT sales.id as id, sales.amount, sales.quantity, " +
@@ -39,10 +39,6 @@ public class SaleTable implements Table<Sale> {
                     return list;
                 }
             }
-        } catch (SQLException throwable) {
-            System.out.println(throwable.getMessage());
-            throwable.printStackTrace();
-            return new LinkedList<>();
         }
     }
 

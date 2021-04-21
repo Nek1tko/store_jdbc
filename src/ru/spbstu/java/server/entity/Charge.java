@@ -1,18 +1,20 @@
 package ru.spbstu.java.server.entity;
 
-import java.util.Date;
+import java.sql.Date;
 
 public class Charge {
     private Long id;
     private Double amount;
     private Date date;
-    private ExpenseItem expenseItem;
+    private Long expenseItemId;
+    private String name;
 
-    public Charge(Long id, Double amount, Date date, ExpenseItem expenseItem) {
+    public Charge(Long id, Double amount, Date date, Long expenseItemId, String name) {
         this.id = id;
         this.amount = amount;
         this.date = date;
-        this.expenseItem = expenseItem;
+        this.expenseItemId = expenseItemId;
+        this.name = name;
     }
 
     public Charge() {
@@ -30,10 +32,6 @@ public class Charge {
         return date;
     }
 
-    public ExpenseItem getExpenseItem() {
-        return expenseItem;
-    }
-
     public void setId(Long id) {
         this.id = id;
     }
@@ -46,7 +44,19 @@ public class Charge {
         this.date = date;
     }
 
-    public void setExpenseItem(ExpenseItem expenseItem) {
-        this.expenseItem = expenseItem;
+    public Long getExpenseItemId() {
+        return expenseItemId;
+    }
+
+    public void setExpenseItemId(Long expenseItemId) {
+        this.expenseItemId = expenseItemId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }
