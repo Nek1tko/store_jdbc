@@ -1,4 +1,4 @@
-package ru.spbstu.java.ui.controller;
+package ru.spbstu.java.ui.controller.tables_controllers;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;

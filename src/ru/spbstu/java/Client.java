@@ -8,12 +8,11 @@ import javafx.stage.Stage;
 import ru.spbstu.java.server.User;
 import ru.spbstu.java.server.connection.OracleDBConnection;
 import ru.spbstu.java.server.database.DataBase;
-import ru.spbstu.java.ui.controller.SalesController;
 
 import java.io.IOException;
 
 public class Client extends Application {
-    private Stage currentStage;
+    private static Stage currentStage;
 
     @Override
     public void start(Stage stage) throws IOException {
@@ -25,11 +24,11 @@ public class Client extends Application {
                 "localhost:1521:XE")
         );
         currentStage = stage;
-        replaceStageContent("ui/resources/main_page.fxml");
+        replaceStageContent("ui/resources/login/login_page.fxml");
         currentStage.show();
     }
 
-    private void replaceStageContent(String fxml) throws IOException {
+    public static void replaceStageContent(String fxml) throws IOException {
         FXMLLoader loader = new FXMLLoader(Client.class.getResource(fxml));
         Parent page = loader.load();
         Scene scene = currentStage.getScene();
@@ -37,7 +36,7 @@ public class Client extends Application {
             scene = new Scene(page);
             currentStage.setScene(scene);
         } else {
-            currentStage.getScene().setRoot(page);
+            currentStage.setScene(new Scene(page));
         }
     }
 

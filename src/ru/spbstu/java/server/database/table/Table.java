@@ -5,7 +5,7 @@ import java.util.List;
 
 public interface Table<T> {
     List<T> get() throws SQLException;
-    void insert(T entity);
-    void update(T entity);
-    void delete(Long id);
+    void insert(T entity) throws SQLException;
+    void update(T entity) throws SQLException;
+    void delete(Long id) throws SQLException;
 }

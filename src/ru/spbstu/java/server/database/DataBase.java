@@ -1,6 +1,7 @@
 package ru.spbstu.java.server.database;
 
 import ru.spbstu.java.server.connection.DBConnection;
+import ru.spbstu.java.server.database.exeption.InvalidCredoException;
 import ru.spbstu.java.server.database.table.ChargeTable;
 import ru.spbstu.java.server.database.table.ExpenseItemTable;
 import ru.spbstu.java.server.database.table.SaleTable;
@@ -11,6 +12,7 @@ import ru.spbstu.java.server.entity.Sale;
 import ru.spbstu.java.server.entity.Warehouse;
 import ru.spbstu.java.server.exception.SingletonException;
 
+import java.sql.Date;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -20,6 +22,8 @@ public class DataBase {
     private final SaleTable saleTable;
     private final ExpenseItemTable expenseItemTable;
     private final ChargeTable chargeTable;
+    private final StatisticRepository statisticRepository;
+    private final LoginRepository loginRepository;
     private static DataBase dataBase;
 
     public synchronized static void init(DBConnection dbConnection) {
@@ -41,6 +45,8 @@ public class DataBase {
         this.saleTable = new SaleTable(dbConnection);
         this.expenseItemTable = new ExpenseItemTable(dbConnection);
         this.chargeTable = new ChargeTable(dbConnection);
+        this.statisticRepository = new StatisticRepository(dbConnection);
+        this.loginRepository = new LoginRepository(dbConnection);
     }
 
     public List<Warehouse> getWarehouses() throws SQLException {
@@ -71,5 +77,31 @@ public class DataBase {
 
     public List<Charge> getCharges() throws SQLException {
         return chargeTable.get();
+    }
+
+    public Charge addCharge(Charge charge) throws SQLException {
+        chargeTable.insert(charge);
+        return charge;
+    }
+
+    public Charge updateCharge(Charge charge) throws SQLException {
+        chargeTable.update(charge);
+        return charge;
+    }
+
+    public void deleteCharge(Long id) throws SQLException {
+        chargeTable.delete(id);
+    }
+
+    public List<Sale> getTop5Items(Date startDate, Date endDate) throws SQLException {
+        return statisticRepository.getTop5Items(startDate, endDate);
+    }
+
+    public Double getMarginForMonth(Date date) throws SQLException {
+        return statisticRepository.getMarginForMonth(date);
+    }
+
+    public void signIn(String login, String password) throws SQLException, InvalidCredoException {
+        loginRepository.signIn(login, password);
     }
 }

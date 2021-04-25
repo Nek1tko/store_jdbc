@@ -1,15 +1,10 @@
 package ru.spbstu.java.server.database.table;
 
 import ru.spbstu.java.server.builder.ChargeBuilder;
-import ru.spbstu.java.server.builder.SaleBuilder;
 import ru.spbstu.java.server.connection.DBConnection;
 import ru.spbstu.java.server.entity.Charge;
-import ru.spbstu.java.server.entity.Sale;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -47,17 +42,46 @@ public class ChargeTable implements Table<Charge>{
     }
 
     @Override
-    public void insert(Charge entity) {
-
+    public void insert(Charge entity) throws SQLException {
+        try (Connection connection = dbConnection.connect()) {
+            try (PreparedStatement statement = connection.prepareStatement(
+                    "INSERT INTO CHARGES (AMOUNT, CHARGE_DATE, EXPENSE_ITEM_ID) VALUES (?, ?, ?)",
+                    new String[]{"ID"})) {
+                statement.setDouble(1, entity.getAmount());
+                statement.setDate(2, entity.getDate());
+                statement.setLong(3, entity.getExpenseItemId());
+                statement.executeUpdate();
+                try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        entity.setId(generatedKeys.getLong(1));
+                    }
+                }
+            }
+        }
     }
 
     @Override
-    public void update(Charge entity) {
-
+    public void update(Charge entity) throws SQLException {
+        try (Connection connection = dbConnection.connect()) {
+            try (PreparedStatement statement = connection.prepareStatement("UPDATE CHARGES SET AMOUNT = ?," +
+                    " CHARGE_DATE = ?, EXPENSE_ITEM_ID = ? WHERE ID = ?")
+            ) {
+                statement.setDouble(1, entity.getAmount());
+                statement.setDate(2, entity.getDate());
+                statement.setLong(3, entity.getExpenseItemId());
+                statement.setLong(4, entity.getId());
+                statement.executeUpdate();
+            }
+        }
     }
 
     @Override
-    public void delete(Long id) {
-
+    public void delete(Long id) throws SQLException {
+        try (Connection connection = dbConnection.connect()) {
+            try (Statement statement = connection.createStatement()) {
+                String sql = "DELETE FROM CHARGES WHERE ID = " + id;
+                statement.execute(sql);
+            }
+        }
     }
 }
