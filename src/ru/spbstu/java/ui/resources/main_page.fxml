@@ -8,24 +8,27 @@
 
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0"
-            prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+            prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="ru.spbstu.java.ui.controller.MainPageController">
    <ImageView fitHeight="274.0" fitWidth="508.0" layoutX="44.0" layoutY="33.0" pickOnBounds="true" preserveRatio="true">
       <image>
          <Image url="@static/hardware_store.png"/>
       </image>
    </ImageView>
-   <Button layoutX="62.0" layoutY="328.0" mnemonicParsing="false" prefHeight="43.0" prefWidth="102.0" text="Tables">
+   <Button fx:id="tablesButton" layoutX="62.0" layoutY="328.0" mnemonicParsing="false" onAction="#showTables"
+           prefHeight="43.0" prefWidth="102.0" text="Tables">
       <font>
          <Font name="Times New Roman" size="14.0"/>
       </font>
    </Button>
-   <Button layoutX="238.0" layoutY="328.0" mnemonicParsing="false" prefHeight="43.0" prefWidth="120.0"
-           text="Top 5 sold stuff">
+   <Button fx:id="top5ItemsButton" layoutX="238.0" layoutY="328.0" mnemonicParsing="false" onAction="#showTop5Items"
+           prefHeight="43.0" prefWidth="120.0" text="Top 5 sold items">
       <font>
          <Font name="Times New Roman" size="14.0"/>
       </font>
    </Button>
-   <Button layoutX="433.0" layoutY="328.0" mnemonicParsing="false" prefHeight="43.0" prefWidth="102.0" text="Margin">
+   <Button fx:id="marginButton" layoutX="433.0" layoutY="328.0" mnemonicParsing="false" onAction="#showMargin"
+           prefHeight="43.0" prefWidth="102.0" text="Margin">
       <font>
          <Font name="Times New Roman" size="14.0"/>
       </font>

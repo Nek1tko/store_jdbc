@@ -1,4 +1,4 @@
-package ru.spbstu.java.ui.controller.statistic_controllers;
+package ru.spbstu.java.ui.controller.statistic;
 
 import javafx.fxml.Initializable;
 

@@ -1,15 +1,12 @@
-package ru.spbstu.java.ui.controller.tables_controllers;
+package ru.spbstu.java.ui.controller.tables;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.MouseEvent;
-import javafx.stage.Stage;
 import ru.spbstu.java.server.builder.SaleBuilder;
 import ru.spbstu.java.server.database.DataBase;
 import ru.spbstu.java.server.entity.Sale;

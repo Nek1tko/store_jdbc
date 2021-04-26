@@ -42,17 +42,18 @@ public class StatisticRepository {
         public Double getMarginForMonth(Date date) throws SQLException {
             try (Connection connection = dbConnection.connect()) {
                 try (Statement statement = connection.createStatement()) {
+                    Timestamp timestamp = new Timestamp(date.getTime());
                     String sql = "SELECT (INCOME.AMOUNT - OUTCOME.AMOUNT) AS MARGIN " +
                             "FROM (SELECT sum(AMOUNT) AS AMOUNT " +
                             "FROM SALES " +
-                            "WHERE SALE_DATE BETWEEN add_months(trunc(" + date + ", 'MONTH'), -1) " +
+                            "WHERE SALE_DATE BETWEEN add_months(trunc(TIMESTAMP '" + timestamp + "', 'MONTH'), -1) " +
                             "AND " +
-                            "trunc(" + date + ", 'MONTH')) INCOME, " +
+                            "trunc(TIMESTAMP '" + timestamp + "', 'MONTH')) INCOME, " +
                             "(SELECT SUM(AMOUNT) AS AMOUNT " +
                             "FROM CHARGES " +
-                            "WHERE CHARGE_DATE BETWEEN add_months(trunc(" + date + ", 'MONTH'), -1) " +
+                            "WHERE CHARGE_DATE BETWEEN add_months(trunc(TIMESTAMP '" + timestamp + "', 'MONTH'), -1) " +
                             "AND " +
-                            "trunc(" + date + ", 'MONTH')) OUTCOME";
+                            "trunc(TIMESTAMP '" + timestamp + "', 'MONTH')) OUTCOME";
                     ResultSet resultSet = statement.executeQuery(sql);
                     Double margin = 0.0;
                     if (resultSet.next()) {
