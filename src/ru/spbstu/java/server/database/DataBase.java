@@ -53,25 +53,46 @@ public class DataBase {
         return warehouseTable.get();
     }
 
+    public void addWarehouse(Warehouse warehouse) throws SQLException {
+        warehouseTable.insert(warehouse);
+    }
+
+    public void updateWarehouse(Warehouse warehouse) throws SQLException {
+        warehouseTable.update(warehouse);
+    }
+
+    public void deleteWarehouse(Long id) throws SQLException {
+        warehouseTable.delete(id);
+    }
+
     public List<ExpenseItem> getExpenseItems() throws SQLException {
         return expenseItemTable.get();
     }
 
+    public void addExpenseItem(ExpenseItem expenseItem) throws SQLException {
+        expenseItemTable.insert(expenseItem);
+    }
+
+    public void updateExpenseItem(ExpenseItem expenseItem) throws SQLException {
+        expenseItemTable.update(expenseItem);
+    }
+
+    public void deleteExpenseItem(Long id) throws SQLException {
+        expenseItemTable.delete(id);
+    }
     public List<Sale> getSales() throws SQLException {
         return saleTable.get();
     }
 
-    public Sale addSale(Sale sale) {
+    public void addSale(Sale sale) throws SQLException {
         saleTable.insert(sale);
-        return sale;
     }
 
-    public Sale updateSale(Sale sale) {
+    public void updateSale(Sale sale) throws SQLException {
         saleTable.update(sale);
-        return sale;
     }
 
-    public void deleteSale(Long id) {
+    public void deleteSale(Long id) throws SQLException {
         saleTable.delete(id);
     }
 
@@ -79,14 +100,12 @@ public class DataBase {
         return chargeTable.get();
     }
 
-    public Charge addCharge(Charge charge) throws SQLException {
+    public void addCharge(Charge charge) throws SQLException {
         chargeTable.insert(charge);
-        return charge;
     }
 
-    public Charge updateCharge(Charge charge) throws SQLException {
+    public void updateCharge(Charge charge) throws SQLException {
         chargeTable.update(charge);
-        return charge;
     }
 
     public void deleteCharge(Long id) throws SQLException {

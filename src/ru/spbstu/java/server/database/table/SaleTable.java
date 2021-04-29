@@ -43,7 +43,7 @@ public class SaleTable implements Table<Sale> {
     }
 
     @Override
-    public void insert(Sale entity) {
+    public void insert(Sale entity) throws SQLException {
         try (Connection connection = dbConnection.connect()) {
             try (PreparedStatement statement = connection.prepareStatement(
                     "INSERT INTO SALES (AMOUNT, QUANTITY, SALE_DATE, WAREHOUSE_ID) VALUES (?, ?, ?, ?)",
@@ -59,14 +59,11 @@ public class SaleTable implements Table<Sale> {
                     }
                 }
             }
-        } catch (SQLException throwable) {
-            System.out.println(throwable.getMessage());
-            throwable.printStackTrace();
         }
     }
 
     @Override
-    public void update(Sale entity) {
+    public void update(Sale entity) throws SQLException {
         try (Connection connection = dbConnection.connect()) {
             try (PreparedStatement statement = connection.prepareStatement("UPDATE SALES SET AMOUNT = ?," +
                     " QUANTITY = ?, SALE_DATE = ?, WAREHOUSE_ID = ? WHERE ID = ?")
@@ -78,21 +75,16 @@ public class SaleTable implements Table<Sale> {
                 statement.setLong(5, entity.getId());
                 statement.executeUpdate();
             }
-        } catch (SQLException throwable) {
-            throwable.printStackTrace();
         }
     }
 
     @Override
-    public void delete(Long id) {
+    public void delete(Long id) throws SQLException {
         try (Connection connection = dbConnection.connect()) {
             try (Statement statement = connection.createStatement()) {
                 String sql = "DELETE FROM SALES WHERE ID = " + id;
                 statement.execute(sql);
             }
-        } catch (SQLException throwable) {
-            System.out.println(throwable.getMessage());
-            throwable.printStackTrace();
         }
     }
 }

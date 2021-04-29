@@ -7,6 +7,7 @@ import javafx.scene.control.TextField;
 import ru.spbstu.java.Client;
 import ru.spbstu.java.server.database.DataBase;
 import ru.spbstu.java.server.database.exeption.InvalidCredoException;
+import ru.spbstu.java.ui.error.AlertWindow;
 
 import java.io.IOException;
 import java.net.URL;
@@ -37,7 +38,7 @@ public class LoginController implements Initializable {
             } catch (SQLException | InvalidCredoException | IOException throwable) {
                 loginTextField.clear();
                 passwordTextField.clear();
-                throwable.printStackTrace();
+                AlertWindow.createAlertWindow("Invalid uesrname or password", "Error");
             }
         }
     }

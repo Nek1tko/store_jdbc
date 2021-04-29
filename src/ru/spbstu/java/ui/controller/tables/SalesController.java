@@ -7,11 +7,15 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import ru.spbstu.java.Client;
 import ru.spbstu.java.server.builder.SaleBuilder;
 import ru.spbstu.java.server.database.DataBase;
 import ru.spbstu.java.server.entity.Sale;
 import ru.spbstu.java.server.entity.Warehouse;
+import ru.spbstu.java.ui.error.AlertWindow;
+import ru.spbstu.java.ui.filter.TextFieldFilters;
 
+import java.io.IOException;
 import java.net.URL;
 import java.sql.Date;
 import java.sql.SQLException;
@@ -33,6 +37,9 @@ public class SalesController implements Initializable {
 
     @FXML
     private Button updateSaleButton;
+
+    @FXML
+    private Button deleteSaleButton;
 
     @FXML
     private ComboBox<String> saleStuffName;
@@ -64,6 +71,10 @@ public class SalesController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         dataBase = ru.spbstu.java.server.database.DataBase.instance();
+
+        amountField.setTextFormatter(new TextFormatter<>(TextFieldFilters.getDoubleFilter()));
+        quantityField.setTextFormatter(new TextFormatter<>(TextFieldFilters.getIntegerFilter()));
+
         salesTable.getSelectionModel().getSelectedItems().addListener((ListChangeListener<Sale>) change -> {
             Sale sale = salesTable.getSelectionModel().getSelectedItem();
             if (sale != null) {
@@ -72,6 +83,7 @@ public class SalesController implements Initializable {
                 amountField.setText(sale.getAmount().toString());
                 dateField.setValue(sale.getDate().toLocalDate());
                 cancelButton.setDisable(false);
+                deleteSaleButton.setDisable(false);
                 updateSaleButton.setDisable(false);
                 updateSaleButton.setVisible(true);
                 addSaleButton.setDisable(true);
@@ -95,7 +107,7 @@ public class SalesController implements Initializable {
             ObservableList<Sale> listSaleTransferObject = getSales();
             salesTable.getItems().addAll(listSaleTransferObject);
         } catch (SQLException throwable) {
-            throwable.printStackTrace();
+            AlertWindow.createAlertWindow("Sql error when trying to get records", "Error");
         }
 
     }
@@ -125,11 +137,16 @@ public class SalesController implements Initializable {
                     .amount(Double.parseDouble(amountField.getText()))
                     .quantity(Integer.parseInt(quantityField.getText()))
                     .build();
-            dataBase.addSale(sale);
-            salesTable.getItems().add(sale);
+            try {
+                dataBase.addSale(sale);
+                salesTable.getItems().add(sale);
+            } catch (SQLException throwable) {
+                AlertWindow.createAlertWindow("Sql error when trying to add", "Error");
+            }
         } else {
-            createAlertWindow();
+            AlertWindow.createAlertWindow("All fields must be filled", "Error");
         }
+        clear();
     }
 
     public void updateSale() {
@@ -142,22 +159,35 @@ public class SalesController implements Initializable {
                     .date(Date.valueOf(dateField.getValue()))
                     .warehouseId(warehouses.get(saleStuffName.getValue()))
                     .build();
-            dataBase.updateSale(updatedSale);
-            currentSale.setQuantity(updatedSale.getQuantity());
-            currentSale.setAmount(updatedSale.getAmount());
-            currentSale.setDate(updatedSale.getDate());
-            currentSale.setWarehouseId(updatedSale.getWarehouseId());
-            salesTable.refresh();
+            try {
+                dataBase.updateSale(updatedSale);
+                currentSale.setQuantity(updatedSale.getQuantity());
+                currentSale.setAmount(updatedSale.getAmount());
+                currentSale.setDate(updatedSale.getDate());
+                currentSale.setWarehouseId(updatedSale.getWarehouseId());
+                salesTable.refresh();
+            }
+            catch (SQLException throwable) {
+                AlertWindow.createAlertWindow("Sql error when trying to add", "Error");
+                saleStuffName.setValue(currentSale.getName());
+                quantityField.setText(currentSale.getQuantity().toString());
+                amountField.setText(currentSale.getAmount().toString());
+                dateField.setValue(currentSale.getDate().toLocalDate());
+            }
         } else {
-            createAlertWindow();
+            AlertWindow.createAlertWindow("All fields must be filled", "Error");
         }
     }
 
     public void deleteSale() {
         Sale selectedSale = salesTable.getSelectionModel().getSelectedItem();
         if (selectedSale != null) {
-            dataBase.deleteSale(selectedSale.getId());
-            salesTable.getItems().remove(selectedSale);
+            try {
+                dataBase.deleteSale(selectedSale.getId());
+                salesTable.getItems().remove(selectedSale);
+            } catch (SQLException throwable) {
+                AlertWindow.createAlertWindow("Sql error when trying to delete", "Error");
+            }
         }
     }
 
@@ -166,18 +196,34 @@ public class SalesController implements Initializable {
         updateSaleButton.setVisible(false);
         addSaleButton.setDisable(false);
         addSaleButton.setVisible(true);
-        saleStuffName.setValue("");
-        quantityField.setText("");
-        amountField.setText("");
-        dateField.setValue(LocalDate.now());
+        cancelButton.setDisable(true);
+        deleteSaleButton.setDisable(true);
+        clear();
         salesTable.getSelectionModel().clearSelection();
     }
 
-    private void createAlertWindow() {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Invalid input");
-        alert.setHeaderText(null);
-        alert.setContentText("All fields must not be empty!");
-        alert.showAndWait();
+    public void close() {
+        try {
+            Client.replaceStageContent("ui/resources/main_page.fxml");
+        } catch (IOException e) {
+            AlertWindow.createAlertWindow("Sql error when trying to open main page",
+                    "Error");
+        }
+    }
+
+    public void openWarehousePage() {
+        try {
+            Client.replaceStageContent("ui/resources/tabs/warehouse.fxml");
+        } catch (IOException e) {
+            AlertWindow.createAlertWindow("Sql error when trying to open warehouse page",
+                    "Error");
+        }
+    }
+
+    private void clear() {
+        saleStuffName.getSelectionModel().clearSelection();
+        quantityField.clear();
+        amountField.clear();
+        dateField.setValue(LocalDate.now());
     }
 }

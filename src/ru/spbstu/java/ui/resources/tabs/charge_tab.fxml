@@ -19,7 +19,7 @@
                 <TableColumn fx:id="dateColumn" prefWidth="141.60003051757815" text="Date" />
             </columns>
         </TableView>
-        <Button fx:id="deleteChargeButton" layoutX="554.0" layoutY="91.0" mnemonicParsing="false" onAction="#deleteCharge" prefHeight="32.0" prefWidth="92.0" text="Delete" />
+        <Button fx:id="deleteChargeButton" disable="true" layoutX="553.0" layoutY="99.0" mnemonicParsing="false" onAction="#deleteCharge" prefHeight="32.0" prefWidth="92.0" text="Delete" />
         <ComboBox fx:id="expenseItemComboBox" layoutX="533.0" layoutY="155.0" prefHeight="26.0" prefWidth="138.0" />
         <DatePicker fx:id="chargeDate" layoutX="530.0" layoutY="296.0" prefHeight="26.0" prefWidth="139.0" />
         <TextField fx:id="amountTextField" layoutX="532.0" layoutY="231.0" prefHeight="26.0" prefWidth="138.0" />
@@ -33,8 +33,10 @@
                 <Font name="Times New Roman" size="14.0" />
             </font>
         </Text>
-        <Button fx:id="updateChargeButton" disable="true" layoutX="554.0" layoutY="377.0" mnemonicParsing="false" onAction="#updateCharge" prefHeight="38.0" prefWidth="92.0" text="Update" visible="false" />
-        <Button fx:id="addChargeButton" layoutX="554.0" layoutY="377.0" mnemonicParsing="false" onAction="#addCharge" prefHeight="32.0" prefWidth="92.0" text="Add" />
-      <Button fx:id="cancelButton" disable="true" layoutX="553.0" layoutY="30.0" mnemonicParsing="false" onAction="#cancelUpdate" prefHeight="32.0" prefWidth="92.0" text="Cancel" />
+        <Button fx:id="updateChargeButton" disable="true" layoutX="553.0" layoutY="337.0" mnemonicParsing="false" onAction="#updateCharge" prefHeight="32.0" prefWidth="92.0" text="Update" visible="false" />
+        <Button fx:id="addChargeButton" layoutX="553.0" layoutY="337.0" mnemonicParsing="false" onAction="#addCharge" prefHeight="32.0" prefWidth="92.0" text="Add" />
+      <Button fx:id="cancelButton" disable="true" layoutX="554.0" layoutY="58.0" mnemonicParsing="false" onAction="#cancelUpdate" prefHeight="32.0" prefWidth="92.0" text="Cancel" />
+      <Button layoutX="553.0" layoutY="380.0" mnemonicParsing="false" onAction="#openExpenseItemPage" prefHeight="32.0" prefWidth="92.0" text="Expense Item" />
+      <Button fx:id="closeButton" layoutX="553.0" layoutY="14.0" mnemonicParsing="false" onAction="#close" prefHeight="32.0" prefWidth="92.0" text="Close" />
     </children>
 </AnchorPane>

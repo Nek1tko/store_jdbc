@@ -10,9 +10,9 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="591.0" prefWidth="689.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.spbstu.java.ui.controller.tables.SalesController">
+<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="552.0" prefWidth="689.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.spbstu.java.ui.controller.tables.SalesController">
     <children>
-        <TableView fx:id="salesTable" layoutX="14.0" layoutY="14.0" prefHeight="458.0" prefWidth="491.0">
+        <TableView fx:id="salesTable" layoutX="14.0" layoutY="14.0" prefHeight="505.0" prefWidth="491.0">
             <columns>
                 <TableColumn fx:id="saleName" prefWidth="114.0" text="Name" />
                 <TableColumn fx:id="saleQuantity" prefWidth="98.0" text="Quantity" />
@@ -20,7 +20,7 @@
                 <TableColumn fx:id="saleDate" prefWidth="174.0" text="Sale Date " />
             </columns>
         </TableView>
-        <Button fx:id="deleteSaleButton" layoutX="544.0" layoutY="112.0" mnemonicParsing="false" onAction="#deleteSale" prefHeight="34.0" prefWidth="92.0" text="Delete" />
+        <Button fx:id="deleteSaleButton" layoutX="545.0" layoutY="142.0" mnemonicParsing="false" onAction="#deleteSale" prefHeight="34.0" prefWidth="92.0" text="Delete" />
         <Button fx:id="addSaleButton" layoutX="544.0" layoutY="432.0" mnemonicParsing="false" onAction="#addSale" prefHeight="34.0" prefWidth="92.0" text="Add" />
         <ComboBox fx:id="saleStuffName" layoutX="515.0" layoutY="212.0" prefWidth="150.0" />
         <Label layoutX="516.0" layoutY="194.0" prefHeight="17.0" prefWidth="119.0" text="Sale stuff name">
@@ -42,6 +42,8 @@
         </Label>
         <DatePicker fx:id="dateField" layoutX="516.0" layoutY="389.0" prefHeight="25.0" prefWidth="150.0" />
         <Button fx:id="updateSaleButton" disable="true" layoutX="544.0" layoutY="432.0" mnemonicParsing="false" onAction="#updateSale" prefHeight="34.0" prefWidth="91.0" text="Update" visible="false" />
-      <Button fx:id="cancelButton" disable="true" layoutX="544.0" layoutY="35.0" mnemonicParsing="false" onAction="#cancelUpdate" prefHeight="34.0" prefWidth="92.0" text="Cancel" />
+      <Button fx:id="cancelButton" disable="true" layoutX="545.0" layoutY="87.0" mnemonicParsing="false" onAction="#cancelUpdate" prefHeight="34.0" prefWidth="92.0" text="Cancel" />
+      <Button layoutX="544.0" layoutY="486.0" mnemonicParsing="false" onAction="#openWarehousePage" prefHeight="34.0" prefWidth="92.0" text="Warehouse" />
+      <Button fx:id="cancelButton1" layoutX="544.0" layoutY="30.0" mnemonicParsing="false" onAction="#close" prefHeight="34.0" prefWidth="92.0" text="Close" />
     </children>
 </AnchorPane>

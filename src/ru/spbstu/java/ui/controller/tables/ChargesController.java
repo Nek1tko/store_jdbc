@@ -7,11 +7,15 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import ru.spbstu.java.Client;
 import ru.spbstu.java.server.builder.ChargeBuilder;
 import ru.spbstu.java.server.database.DataBase;
 import ru.spbstu.java.server.entity.Charge;
 import ru.spbstu.java.server.entity.ExpenseItem;
+import ru.spbstu.java.ui.error.AlertWindow;
+import ru.spbstu.java.ui.filter.TextFieldFilters;
 
+import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -61,6 +65,8 @@ public class ChargesController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         dataBase = DataBase.instance();
+        amountTextField.setTextFormatter(new TextFormatter<>(TextFieldFilters.getDoubleFilter()));
+
         chargesTable.getSelectionModel().getSelectedItems().addListener((ListChangeListener<Charge>) change -> {
             Charge charge = chargesTable.getSelectionModel().getSelectedItem();
             if (charge != null) {
@@ -68,6 +74,7 @@ public class ChargesController implements Initializable {
                 amountTextField.setText(charge.getAmount().toString());
                 chargeDate.setValue(charge.getDate().toLocalDate());
                 cancelButton.setDisable(false);
+                deleteChargeButton.setDisable(false);
                 updateChargeButton.setDisable(false);
                 updateChargeButton.setVisible(true);
                 addChargeButton.setDisable(true);
@@ -90,7 +97,7 @@ public class ChargesController implements Initializable {
             ObservableList<Charge> listSaleTransferObject = FXCollections.observableArrayList(dataBase.getCharges());
             chargesTable.getItems().addAll(listSaleTransferObject);
         } catch (SQLException throwable) {
-            throwable.printStackTrace();
+            AlertWindow.createAlertWindow("Sql error when trying to get records", "Error");
         }
 
     }
@@ -107,30 +114,39 @@ public class ChargesController implements Initializable {
                 dataBase.addCharge(charge);
                 chargesTable.getItems().add(charge);
             } catch (SQLException throwable) {
-                createAlertWindow();
+                AlertWindow.createAlertWindow("Sql error when trying to add", "Error");
             }
         }
         else {
-            createAlertWindow();
+            AlertWindow.createAlertWindow("All fields must be filled", "Error");
         }
+        clear();
     }
 
     public void updateCharge() {
-        Charge currentCharge = chargesTable.getSelectionModel().getSelectedItem();
-        Charge updatedCharge = new ChargeBuilder()
-                .id(currentCharge.getId())
-                .amount(Double.parseDouble(amountTextField.getText()))
-                .date(Date.valueOf(chargeDate.getValue()))
-                .expenseItemId(expenseItems.get(expenseItemComboBox.getValue()))
-                .build();
-        try {
-            dataBase.updateCharge(updatedCharge);
-            currentCharge.setAmount(updatedCharge.getAmount());
-            currentCharge.setDate(updatedCharge.getDate());
-            currentCharge.setExpenseItemId(updatedCharge.getExpenseItemId());
-            chargesTable.refresh();
-        } catch (SQLException throwable) {
-            createAlertWindow();
+        if (checkFields()) {
+            Charge currentCharge = chargesTable.getSelectionModel().getSelectedItem();
+            Charge updatedCharge = new ChargeBuilder()
+                    .id(currentCharge.getId())
+                    .amount(Double.parseDouble(amountTextField.getText()))
+                    .date(Date.valueOf(chargeDate.getValue()))
+                    .expenseItemId(expenseItems.get(expenseItemComboBox.getValue()))
+                    .build();
+            try {
+                dataBase.updateCharge(updatedCharge);
+                currentCharge.setAmount(updatedCharge.getAmount());
+                currentCharge.setDate(updatedCharge.getDate());
+                currentCharge.setExpenseItemId(updatedCharge.getExpenseItemId());
+                chargesTable.refresh();
+            } catch (SQLException throwable) {
+                AlertWindow.createAlertWindow("Sql error when trying to update", "Error");
+                expenseItemComboBox.setValue(currentCharge.getName());
+                amountTextField.setText(currentCharge.getAmount().toString());
+                chargeDate.setValue(currentCharge.getDate().toLocalDate());
+            }
+        }
+        else {
+            AlertWindow.createAlertWindow("All fields must be filled", "Error");
         }
     }
 
@@ -140,20 +156,39 @@ public class ChargesController implements Initializable {
             dataBase.deleteCharge(charge.getId());
             chargesTable.getItems().remove(charge);
         } catch (SQLException throwable) {
-            createAlertWindow();
+            AlertWindow.createAlertWindow("Sql error when trying to delete", "Error");
         }
     }
+
+    public void close() {
+        try {
+            Client.replaceStageContent("ui/resources/main_page.fxml");
+        } catch (IOException e) {
+            AlertWindow.createAlertWindow("Sql error when trying to open main page",
+                    "Error");
+        }
+    }
+
 
     public void cancelUpdate() {
         updateChargeButton.setDisable(true);
         updateChargeButton.setVisible(false);
         addChargeButton.setDisable(false);
         addChargeButton.setVisible(true);
+        cancelButton.setDisable(true);
+        deleteChargeButton.setDisable(true);
 
-        amountTextField.clear();
-        chargeDate.setValue(LocalDate.now());
-        expenseItemComboBox.setValue("");
+        clear();
         chargesTable.getSelectionModel().clearSelection();
+    }
+
+    public void openExpenseItemPage() {
+        try {
+            Client.replaceStageContent("ui/resources/tabs/expense_item.fxml");
+        } catch (IOException e) {
+            AlertWindow.createAlertWindow("Sql error when trying to open expense item page",
+                    "Error");
+        }
     }
 
     private boolean checkFields() {
@@ -161,11 +196,9 @@ public class ChargesController implements Initializable {
                 !amountTextField.getText().isEmpty();
     }
 
-    private void createAlertWindow() {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Invalid input");
-        alert.setHeaderText(null);
-        alert.setContentText("All fields must not be empty!");
-        alert.showAndWait();
+    private void clear() {
+        amountTextField.clear();
+        chargeDate.setValue(LocalDate.now());
+        expenseItemComboBox.getSelectionModel().clearSelection();
     }
 }

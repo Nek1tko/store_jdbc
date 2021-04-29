@@ -4,9 +4,12 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
+import ru.spbstu.java.Client;
 import ru.spbstu.java.server.database.DataBase;
 import ru.spbstu.java.ui.dto.Month;
+import ru.spbstu.java.ui.error.AlertWindow;
 
+import java.io.IOException;
 import java.net.URL;
 import java.sql.Date;
 import java.sql.SQLException;
@@ -34,6 +37,13 @@ public class MarginController implements Initializable {
         IntStream.iterate(year, i -> i - 1).limit(3).forEach(yearComboBox.getItems()::add);
     }
 
+    public void close() {
+        try {
+            Client.replaceStageContent("ui/resources/main_page.fxml");
+        } catch (IOException e) {
+            AlertWindow.createAlertWindow("Failed to load main page", "Error");
+        }
+    }
 
     public void show() {
         if (check()) {
@@ -45,7 +55,7 @@ public class MarginController implements Initializable {
                 Double margin = dataBase.getMarginForMonth(Date.valueOf(localDate));
                 marginTextBox.setText(margin.toString());
             } catch (SQLException throwable) {
-                throwable.printStackTrace();
+                AlertWindow.createAlertWindow("Failed to show margin", "Error");
             }
         }
     }
